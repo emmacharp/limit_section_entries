@@ -308,10 +308,9 @@ class extension_Limit_Section_Entries extends Extension
         // index page
         if ($callback['context']['page'] === 'index') {
 
-            /* Create button */
-
+            /* Remove Create button */
             if ($this->_max > 0 && $this->_total >= $this->_max) {
-                $context['oPage']->Context->getChild(1)->removeChildAt(count($context['oPage']->Context->getChild(1)->getChildren()) - 1);
+                $context['oPage']->ContentsActions->getChild(0)->removeChildAt(count($context['oPage']->ContentsActions->getChild(0)->getChildren()) - 1);
             }
         }
 
