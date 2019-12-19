@@ -334,6 +334,28 @@ class extension_Limit_Section_Entries extends Extension
 /*------------------------------------------------------------------------------------------------*/
 /*  Blueprints sections  */
 /*------------------------------------------------------------------------------------------------*/
+    private function getChildrenWithId($rootElement, $tagName, $idName) {
+        if (! ($rootElement) instanceof XMLElement) {
+            return null; // not and XMLElement
+        }
+        
+        // contains the right css id and the right node name
+        if (strpos($rootElement->getAttribute('id'), $idName) > -1 && $rootElement->getName() == $tagName) {
+            return $rootElement;
+        }
+
+        // recursive search in child elements
+        foreach ($rootElement->getChildren() as $child) {
+
+            $res = $this->getChildrenWithId($child, $tagName, $idName);
+            
+            if ($res != null) {
+                return $res;
+            }
+        }
+        
+        return null;
+    }
 
     public function dAddSectionElements($context)
     {
@@ -344,7 +366,7 @@ class extension_Limit_Section_Entries extends Extension
         $label->appendChild(new XMLElement('p', __('Limit the maximum number of entries to this positive integer value. Set as 0 or leave empty for unlimited entries.'), array('class' => 'help')));
         $fieldset->appendChild($legend);
         $fieldset->appendChild($label);
-        $context['form']->insertChildAt(2, $fieldset);
+        $this->getChildrenWithId($context['form'], 'section', 'primary')->appendChild($fieldset);
     }
 
     public function dSaveSectionSettings($context)
